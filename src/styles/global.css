@@ -1,0 +1,27 @@
+body, * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f4f9;
+  color: #3a3a3a;
+  -webkit-font-smoothing: antialiased;
+}
+
+ul, ol {
+  list-style-type: none;
+}
+
+#root {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+button {
+  cursor: pointer;
+}
