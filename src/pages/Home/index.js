@@ -7,6 +7,7 @@ import './style.css';
 
 export default () => {
   const [form, setForm] = useState({
+    id: '',
     name: '',
     email: '',
     skills: '',
@@ -15,23 +16,12 @@ export default () => {
   const [candidates, setCandidates] = useState([]);
 
   useEffect(() => {
-    const candidatesArray = [];
-    database.collection('candidates').get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const response = {
-          name: doc.data().name,
-          email: doc.data().email,
-          skills: doc.data().skills,
-        }
-        candidatesArray.push(response);
-      });
-
-      setCandidates([...candidatesArray]);
+    return database.collection('candidates').onSnapshot(snapshot => {
+      const candidatesData = [];
+      snapshot.forEach(doc => candidatesData.push({ ...doc.data(), id: doc.id }));
+      setCandidates(candidatesData);
     });
-    
   }, []);
-
-  console.log(candidates)
   
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -42,6 +32,12 @@ export default () => {
     })
     .catch(function(error) {
         console.error('Error adding document: ', error);
+    });
+
+    setForm({
+      name: '',
+      email: '',
+      skills: '',
     });
   }
 
@@ -60,24 +56,30 @@ export default () => {
       <h1>Cadastre-se para entrevista.</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">Nome</label>
-        <input type="text" name="name" id="name" placeholder="Digite seu nome"
-          onChange={handleChange}
+        <input
+          value={form.name}
+          onChange={handleChange} 
+          type="text" name="name" id="name" placeholder="Digite seu nome"
         />
         <label htmlFor="email">Email</label>
-        <input type="email" name="email" id="email" placeholder="Digite seu e-mail"
-          onChange={handleChange}
+        <input
+          value={form.email}
+          onChange={handleChange} 
+          type="email" name="email" id="email" placeholder="Digite seu e-mail"
         />
         <label htmlFor="skills">Habilidades</label>
-        <textarea name="skills" id="" rows="5" placeholder="Javascript, React, Vue, Angular..."
+        <textarea 
+          value={form.skills}
           onChange={handleChange}
+          name="skills" id="" rows="5" placeholder="Javascript, React, Vue, Angular..."
         ></textarea>
         <button type="submit">Enviar</button>
       </form>
 
       <h2>Candidatos:</h2>
       <ul>
-        {candidates.length && candidates.map(candidate => (
-          <li key={candidate.email}>
+        {'Loading...' && candidates.map(candidate => (
+          <li key={candidate.id}>
             <h4><strong>Nome: </strong>{candidate.name}</h4>
             <p><strong>E-mail: </strong>{candidate.email}</p>
             <p><strong>Habilidades: </strong>{candidate.skills}</p>
