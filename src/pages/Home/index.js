@@ -15,12 +15,14 @@ export default () => {
 
   const [candidates, setCandidates] = useState([]);
 
+  const fetchCandidatesData = snapshot => {
+    const candidatesData = [];
+    snapshot.forEach(doc => candidatesData.push({ ...doc.data(), id: doc.id }));
+    setCandidates(candidatesData);
+  }
+
   useEffect(() => {
-    return database.collection('candidates').onSnapshot(snapshot => {
-      const candidatesData = [];
-      snapshot.forEach(doc => candidatesData.push({ ...doc.data(), id: doc.id }));
-      setCandidates(candidatesData);
-    });
+    return database.collection('candidates').onSnapshot(fetchCandidatesData);
   }, []);
   
   const handleSubmit = (event) => {
@@ -50,10 +52,10 @@ export default () => {
       [key]: value,
     });
   }
-
+  console.log(candidates);
   return (
     <>
-      <h1>Cadastre-se para entrevista.</h1>
+      <h1>Insira os candidatos:</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">Nome</label>
         <input
@@ -76,7 +78,7 @@ export default () => {
         <button type="submit">Enviar</button>
       </form>
 
-      <h2>Candidatos:</h2>
+      <h2>Lista de Candidatos:</h2>
       <ul>
         {'Loading...' && candidates.map(candidate => (
           <li key={candidate.id}>
