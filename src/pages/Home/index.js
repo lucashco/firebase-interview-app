@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import { database } from '../../service/firebase';
 
+import CandidateList from '../../components/CandidateList/index';
+
 
 import './style.css';
 
@@ -91,16 +93,7 @@ export default () => {
         <button type="submit">Enviar</button>
       </form>
 
-      <h2>Lista de Candidatos:</h2>
-      <ul>
-        {'Loading...' && candidates.map(candidate => (
-          <li key={candidate.id}>
-            <h4><strong>Nome: </strong>{candidate.name}</h4>
-            <p><strong>E-mail: </strong>{candidate.email}</p>
-            <p><strong>Habilidades: </strong>{candidate.skills}</p>
-          </li>
-        ))}
-      </ul>
+      <CandidateList candidates={candidates} />
     </>
   )
 }

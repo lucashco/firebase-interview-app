@@ -58,28 +58,3 @@ button:hover {
   background-color: #06beb6;
   color: #fff;
 }
-
-h2 {
-  font-size: 1.5rem;
-  margin: 2rem 0;
-}
-ul li {
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-}
-ul li + li {
-  margin-top: 20px;
-}
-li h4 {
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-}
-li p {
-  font-size: 0.875rem;
-}
-li p + p {
-  margin-top: 0.5rem;
-}
