@@ -15,26 +15,39 @@ export default () => {
 
   const [candidates, setCandidates] = useState([]);
 
-  const fetchCandidatesData = snapshot => {
-    const candidatesData = [];
-    snapshot.forEach(doc => candidatesData.push({ ...doc.data(), id: doc.id }));
-    setCandidates(candidatesData);
+  const fetchCandidates = () => {
+    database.collection('candidates').onSnapshot(snapshot => {
+      const candidatesData = snapshot.docs.map(doc => (
+        {
+          ...doc.data(),
+          id: doc.id
+        })
+      );
+      setCandidates(candidatesData);
+    });
   }
 
   useEffect(() => {
-    return database.collection('candidates').onSnapshot(fetchCandidatesData);
+    fetchCandidates();
   }, []);
-  
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     database.collection('candidates').add(form)
-    .then(function(docRef) {
+      .then(function (docRef) {
         console.log('Document written with ID: ', docRef.id);
-    })
-    .catch(function(error) {
+
+        return docRef.update({
+          id: docRef.id
+        });
+      })
+      .then(function() {
+        console.log('ID updated')
+      })
+      .catch(function (error) {
         console.error('Error adding document: ', error);
-    });
+      });
 
     setForm({
       name: '',
@@ -52,7 +65,7 @@ export default () => {
       [key]: value,
     });
   }
-  console.log(candidates);
+
   return (
     <>
       <h1>Insira os candidatos:</h1>
@@ -60,17 +73,17 @@ export default () => {
         <label htmlFor="name">Nome</label>
         <input
           value={form.name}
-          onChange={handleChange} 
+          onChange={handleChange}
           type="text" name="name" id="name" placeholder="Digite seu nome"
         />
         <label htmlFor="email">Email</label>
         <input
           value={form.email}
-          onChange={handleChange} 
+          onChange={handleChange}
           type="email" name="email" id="email" placeholder="Digite seu e-mail"
         />
         <label htmlFor="skills">Habilidades</label>
-        <textarea 
+        <textarea
           value={form.skills}
           onChange={handleChange}
           name="skills" id="" rows="5" placeholder="Javascript, React, Vue, Angular..."
